@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Smart Study Planner</h1>
+        <p>Plan your studies, ace your exams.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Subjects added</div>
+            <div class="stat-value">{{ subjects|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Days until next exam</div>
+            <div class="stat-value">
+                {% if subjects %}
+                    {{ (subjects[0]["exam_date"]|string)[:10] }}
+                {% else %}
+                    --
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Add a subject</div>
+        <form action="/add" method="POST">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Subject name</label>
+                    <input type="text" name="name" placeholder="e.g. Mathematics" required>
+                </div>
+                <div class="form-group">
+                    <label>Exam date</label>
+                    <input type="date" name="exam_date" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <select name="difficulty">
+                        <option value="1">Easy</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Hard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hours per day</label>
+                    <input type="number" name="hours_per_day" placeholder="e.g. 2" step="0.5" min="0.5" max="12" required>
+                </div>
+            </div>
+            <button type="submit" class="btn">Add Subject</button>
+        </form>
+    </div>
+
+    {% if subjects %}
+    <div class="card">
+        <div class="card-title">Your subjects</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Exam date</th>
+                    <th>Difficulty</th>
+                    <th>Hours/day</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in subjects %}
+                <tr>
+                    <td>{{ s["name"] }}</td>
+                    <td>{{ s["exam_date"] }}</td>
+                    <td>
+                        {% if s["difficulty"] == 1 %}
+                            <span class="badge easy">Easy</span>
+                        {% elif s["difficulty"] == 2 %}
+                            <span class="badge medium">Medium</span>
+                        {% else %}
+                            <span class="badge hard">Hard</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ s["hours_per_day"] }} hrs</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/generate" class="btn generate-btn">Generate Study Plan</a>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
