@@ -1,5 +1,6 @@
 # Smart Study Planner
-
+## Live Demo
+https://smart-study-planner-7pmm.onrender.com
 I built this because I kept forgetting to study for exams until it was too late.
 This is a web app that takes your subjects, exam dates, and how hard each subject 
 is — and builds you a realistic day-by-day study schedule automatically.
